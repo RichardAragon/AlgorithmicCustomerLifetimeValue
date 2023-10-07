@@ -1,4 +1,4 @@
-# AlgorithmicCustomerLifetimeValue
+# Algorithmic Customer Lifetime Value
 Calculates the CLV of a customer by converting the Customer Lifecycle into a mathematical equation, then running customer attributes through the algorithm.
 Customer Lifetime Value (CLV) = Customer Value * Customer Lifespan
 Customer Value can be calculated using the following formula:
