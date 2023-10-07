@@ -1,0 +1,81 @@
+import numpy as np
+import pandas as pd
+
+def calculate_customer_value(df, average_revenue_per_customer, average_cost_per_customer, customer_retention_rate):
+  """Calculates the customer value for each customer in the DataFrame.
+
+  Args:
+    df: A Pandas DataFrame containing customer data.
+    average_revenue_per_customer: The average revenue per customer.
+    average_cost_per_customer: The average cost per customer.
+    customer_retention_rate: The customer retention rate.
+
+  Returns:
+    A Pandas Series containing the customer value for each customer.
+  """
+
+  customer_value = (average_revenue_per_customer - average_cost_per_customer) * customer_retention_rate
+  return customer_value
+
+def calculate_customer_lifespan(df, average_number_of_purchases_per_customer, customer_churn_rate):
+  """Calculates the customer lifespan for each customer in the DataFrame.
+
+  Args:
+    df: A Pandas DataFrame containing customer data.
+    average_number_of_purchases_per_customer: The average number of purchases per customer.
+    customer_churn_rate: The customer churn rate.
+
+  Returns:
+    A Pandas Series containing the customer lifespan for each customer.
+  """
+
+  customer_lifespan = average_number_of_purchases_per_customer / customer_churn_rate
+  return customer_lifespan
+
+def calculate_customer_lifetime_value(df, customer_value, customer_lifespan):
+  """Calculates the customer lifetime value for each customer in the DataFrame.
+
+  Args:
+    df: A Pandas DataFrame containing customer data.
+    customer_value: A Pandas Series containing the customer value for each customer.
+    customer_lifespan: A Pandas Series containing the customer lifespan for each customer.
+
+  Returns:
+    A Pandas Series containing the customer lifetime value for each customer.
+  """
+
+  customer_lifetime_value = customer_value * customer_lifespan
+  return customer_lifetime_value
+
+def main():
+  """Calculates the customer lifetime value for each customer in the DataFrame."""
+
+  # Load the customer data
+  df = pd.read_csv('customer_data.csv')
+
+  # Calculate the average revenue per customer
+  average_revenue_per_customer = df['revenue'].mean()
+
+  # Calculate the average cost per customer
+  average_cost_per_customer = df['cost'].mean()
+
+  # Calculate the customer retention rate
+  customer_retention_rate = df['number_of_active_customers'].diff().shift(-1).sum() / df['number_of_active_customers'].sum()
+
+  # Calculate the customer churn rate
+  customer_churn_rate = 1 - customer_retention_rate
+
+  # Calculate the customer value
+  customer_value = calculate_customer_value(df, average_revenue_per_customer, average_cost_per_customer, customer_retention_rate)
+
+  # Calculate the customer lifespan
+  customer_lifespan = calculate_customer_lifespan(df, df['number_of_purchases'].mean(), customer_churn_rate)
+
+  # Calculate the customer lifetime value
+  customer_lifetime_value = calculate_customer_lifetime_value(df, customer_value, customer_lifespan)
+
+  # Print the customer lifetime value for each customer
+  print(customer_lifetime_value)
+
+if __name__ == '__main__':
+  main()
